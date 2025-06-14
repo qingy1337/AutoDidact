@@ -26,7 +26,7 @@ from langchain.vectorstores import FAISS
 from embeddings import CustomHuggingFaceEmbeddings
 
 # Load your markdown file (adjust the path as needed)
-loader = UnstructuredMarkdownLoader("./data/mission_report.md")
+loader = UnstructuredMarkdownLoader("./data/env_sci.md")
 docs = loader.load()
 
 # Split the document into smaller chunks (each 1000 characters, no overlap)
