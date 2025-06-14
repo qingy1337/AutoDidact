@@ -25,8 +25,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from embeddings import CustomHuggingFaceEmbeddings
 
-
-
 # Load your markdown file (adjust the path as needed)
 loader = UnstructuredMarkdownLoader("./data/mission_report.md")
 docs = loader.load()
@@ -48,42 +46,33 @@ vectorstore = FAISS.from_documents(chunks, embeddings)
 vectorstore.save_local("faiss_index")
 print("Saved FAISS index to 'faiss_index'")
 
-# ========= Part 2: QA Generation using Llama Backend =========
+# ========= Part 2: QA Generation using OpenAI API =========
 
-# Setup Llama backend via unsloth and vLLM
-from unsloth import FastLanguageModel
-from vllm import SamplingParams
-import rl_helpers  # Ensure you have this or remove if not used
+# Setup OpenAI backend via LangChain
+from langchain.llms import OpenAI
 
-# Load the Llama model (adjust parameters as needed)
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name="meta-llama/meta-Llama-3.1-8B-Instruct",
-    max_seq_length=4096,
-    load_in_4bit=True,       # Use 4-bit quantization if desired
-    fast_inference=True,      # Enable fast inference
-    gpu_memory_utilization=0.6  # Adjust based on your GPU memory
-)
+# Load OpenAI API key from environment variable
+openai_api_key = os.getenv("OPENAI_API_KEY")
+if not openai_api_key:
+    raise ValueError("OPENAI_API_KEY environment variable not set")
 
-# Define sampling parameters for generation
-sampling_params = SamplingParams(
-    temperature=0.3,
+# Initialize OpenAI model with Mistral base URL
+base_url = "https://api.mistral.ai/v1"
+llm = OpenAI(
+    openai_api_key=openai_api_key,
+    base_url=base_url,
+    model_name="mistral-large-2411",  # Adjust model name as needed
+    temperature=0.1,
+    max_tokens=8192,
     top_p=0.95,
-    max_tokens=4096,
 )
 
 def batch_generate(prompts: List[str]) -> List[str]:
     """
-    Given a list of prompt strings, returns a list of generated outputs.
+    Given a list of prompt strings, returns a list of generated outputs using OpenAI.
     """
-    def format_input(text: str) -> str:
-        return tokenizer.apply_chat_template(
-            [{"role": "user", "content": text}],
-            tokenize=False,
-            add_generation_prompt=True
-        )
-    formatted = [format_input(p) for p in prompts]
-    outputs = model.fast_generate(formatted, sampling_params=sampling_params)
-    return [output.outputs[0].text for output in outputs]
+    result = llm.generate(prompts)
+    return [result.generations[i][0].text for i in range(len(prompts))]
 
 def parse_qa_block(block: str) -> Optional[Tuple[str, str, str]]:
     """
