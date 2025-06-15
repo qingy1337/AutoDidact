@@ -66,7 +66,7 @@ if not mistral_api_key:
     raise ValueError("MISTRAL_API_KEY environment variable not set")
 
 llm = ChatMistralAI(
-    model_name="mistral-large-2411",  # Use the correct model name
+    model_name="mistral-small-2501",  # Use the correct model name
     temperature=0.2,
     max_retries=10,
     max_tokens=8192,  # Reduced to a safer value; adjust as needed
