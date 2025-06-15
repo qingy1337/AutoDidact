@@ -65,7 +65,7 @@ if not mistral_api_key:
 llm = ChatMistralAI(
     model_name="mistral-large-2411",  # Use the correct model name
     temperature=0.2,
-    max_retries=2,
+    max_retries=10,
     max_tokens=8192,  # Reduced to a safer value; adjust as needed
     top_p=0.95,
 )
