@@ -31,6 +31,9 @@ docs = loader.load()
 
 print(f"Number of initial documents: {len(docs)}")
 
+print(f"Loaded content length: {len(docs[0].page_content)}")
+print(f"First 500 characters: {docs[0].page_content[:500]}")
+
 # Split the document into smaller chunks (each 1000 characters, no overlap)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 chunks = text_splitter.split_documents(docs)
