@@ -29,9 +29,14 @@ from embeddings import CustomHuggingFaceEmbeddings
 loader = UnstructuredMarkdownLoader("./data/env_sci.md")
 docs = loader.load()
 
+print(f"Number of initial documents: {len(docs)}")
+
 # Split the document into smaller chunks (each 1000 characters, no overlap)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 chunks = text_splitter.split_documents(docs)
+
+total_chars = sum(len(chunk.page_content) for chunk in chunks)
+print(f"Total characters in chunks: {total_chars}")
 
 # Save chunks for later use
 os.makedirs("saved_data", exist_ok=True)
@@ -196,7 +201,7 @@ def generate_question_batch_for_chunks(chunks: List, num_questions: int = 2, dif
     return final_questions
 
 # Generate QA pairs in batch (using a sliding window over the chunks)
-all_questions = generate_question_batch_for_chunks(chunks, num_questions=2, difficulty="medium")
+all_questions = generate_question_batch_for_chunks(chunks, num_questions=8, difficulty="medium")
 print(f"Generated {len(all_questions)} QA pairs.")
 
 # Save the QA pairs to a JSON file
