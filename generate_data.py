@@ -62,12 +62,11 @@ base_url = "https://api.mistral.ai/v1"
 llm = ChatOpenAI(
     openai_api_key=openai_api_key,
     base_url=base_url,
-    model_name="mistral-large-2411",  # Adjust model name as needed
-    temperature=0.1,
-    timeout=None,
-    max_retries=2,
-    max_tokens=8192,
+    model_name="mistral-large-2411",  # Use the correct model name
+    temperature=0.3,
+    max_tokens=8192,  # Reduced to a safer value; adjust as needed
     top_p=0.95,
+    extra_query={"max_tokens": 8192}  # Explicitly pass max_tokens for compatibility
 )
 
 def batch_generate(prompts: List[str]) -> List[str]:
