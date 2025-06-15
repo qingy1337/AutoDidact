@@ -49,7 +49,7 @@ print("Saved FAISS index to 'faiss_index'")
 # ========= Part 2: QA Generation using OpenAI API =========
 
 # Setup OpenAI backend via LangChain
-from langchain.llms import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 # Load OpenAI API key from environment variable
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -63,6 +63,8 @@ llm = ChatOpenAI(
     base_url=base_url,
     model_name="mistral-large-2411",  # Adjust model name as needed
     temperature=0.1,
+    timeout=None,
+    max_retries=2
     max_tokens=8192,
     top_p=0.95,
 )
