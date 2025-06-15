@@ -50,6 +50,7 @@ print("Saved FAISS index to 'faiss_index'")
 
 # Setup OpenAI backend via LangChain
 from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
 
 # Load OpenAI API key from environment variable
 openai_api_key = os.getenv("OPENAI_API_KEY")
