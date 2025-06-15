@@ -204,7 +204,7 @@ def generate_question_batch_for_chunks(chunks: List, num_questions: int = 2, dif
     return final_questions
 
 # Generate QA pairs in batch (using a sliding window over the chunks)
-all_questions = generate_question_batch_for_chunks(chunks, num_questions=8, difficulty="medium")
+all_questions = generate_question_batch_for_chunks(chunks, num_questions=4, difficulty="medium")
 print(f"Generated {len(all_questions)} QA pairs.")
 
 # Save the QA pairs to a JSON file
