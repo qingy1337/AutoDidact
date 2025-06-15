@@ -64,7 +64,7 @@ llm = ChatOpenAI(
     model_name="mistral-large-2411",  # Adjust model name as needed
     temperature=0.1,
     timeout=None,
-    max_retries=2
+    max_retries=2,
     max_tokens=8192,
     top_p=0.95,
 )
