@@ -49,7 +49,7 @@ print("Saved FAISS index to 'faiss_index'")
 # ========= Part 2: QA Generation using OpenAI API =========
 
 # Setup OpenAI backend via LangChain
-from langchain.llms import OpenAI
+from langchain.llms import ChatOpenAI
 
 # Load OpenAI API key from environment variable
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -58,7 +58,7 @@ if not openai_api_key:
 
 # Initialize OpenAI model with Mistral base URL
 base_url = "https://api.mistral.ai/v1"
-llm = OpenAI(
+llm = ChatOpenAI(
     openai_api_key=openai_api_key,
     base_url=base_url,
     model_name="mistral-large-2411",  # Adjust model name as needed
@@ -69,9 +69,11 @@ llm = OpenAI(
 
 def batch_generate(prompts: List[str]) -> List[str]:
     """
-    Given a list of prompt strings, returns a list of generated outputs using OpenAI.
+    Given a list of prompt strings, returns a list of generated outputs using OpenAI chat model.
     """
-    result = llm.generate(prompts)
+    # Format each prompt as a chat message
+    batch_messages = [[HumanMessage(content=prompt)] for prompt in prompts]
+    result = llm.generate(batch_messages)
     return [result.generations[i][0].text for i in range(len(prompts))]
 
 def parse_qa_block(block: str) -> Optional[Tuple[str, str, str]]:
